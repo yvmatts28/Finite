@@ -2,34 +2,38 @@ package com.technology.olympian.finite.Activity
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.View
+import com.franmontiel.fullscreendialog.FullScreenDialogContent
 import com.technology.olympian.finite.Data.ToDoItem
 import com.technology.olympian.finite.R
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import io.realm.RealmResults
-import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView
-import com.technology.olympian.finite.Data.ToDoAdapter
-import io.realm.Sort
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
+import com.franmontiel.fullscreendialog.FullScreenDialogFragment
 
 
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(),FullScreenDialogFragment.OnDiscardListener {
+    override fun onDiscard() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        var realm = Realm.getInstance(this as RealmConfiguration)
-//        var list:RealmResults<ToDoItem> = realm
-//                                        .where(>)
+        fab_menu.addTask.setOnClickListener {
 
-       var realm = Realm.getInstance(this as RealmConfiguration)
-        val list = realm
-                .where(ToDoItem::class.java)
-                .findAllSorted("taskId",Sort.ASCENDING)
-        val toDoRealmAdapter = ToDoAdapter(list, this, true, true)
-        val realmRecyclerView = findViewById<View>(R.id.realm_recycler_view) as RealmRecyclerView
-        realmRecyclerView.setAdapter(toDoRealmAdapter)
+            var saveFragment = FullScreenDialogFragment.Builder(this@MainActivity)
+                    .setTitle(" ")
+                    //.setConfirmButton()
+                    //.setOnConfirmListener(onConfirmListener)
+                    //.setOnDiscardListener(onDiscardListener)
+                    .setContent(SaveTaskFragment::class.java,null)
+                    .build()
+            saveFragment.show(supportFragmentManager,"Save Task")
+
+        }
     }
 }

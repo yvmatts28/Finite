@@ -7,19 +7,18 @@ import java.util.*
 /**
  * Created by Yash on 25-03-2018.
  */
-class ToDoItem : RealmObject() {
+class ToDoItem  {
 
-    @PrimaryKey
-    var taskId : Long? = null
+    var taskId : Int? = null
     var taskAssignedBy:String?= null
     var taskName:String? = null
-    var taskDate:Date? = null
+    var taskDate:String? = null
 
-    fun setId(id:Long){
+    fun setId(id:Int){
         this.taskId = id
     }
 
-    fun getId(): Long? {
+    fun getId(): Int? {
         return taskId
     }
 
@@ -40,11 +39,11 @@ class ToDoItem : RealmObject() {
         return taskName
     }
 
-    fun setDate(due:Date){
+    fun setDate(due:String){
         this.taskDate = due
     }
 
-    fun getDate(): Date? {
+    fun getDate(): String? {
         return this.taskDate
     }
 }
