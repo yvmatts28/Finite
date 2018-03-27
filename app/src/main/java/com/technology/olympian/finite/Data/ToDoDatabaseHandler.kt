@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.technology.olympian.finite.Model.*
 
 /**
@@ -25,13 +26,15 @@ class ToDoDatabaseHandler(context: Context): SQLiteOpenHelper(context, dbName,nu
 
         var db:SQLiteDatabase = writableDatabase
 
-        var values:ContentValues = ContentValues()
-        values.put(task_id,task.getId())
+        var values = ContentValues()
         values.put(task_name,task.getName())
-        values.put(assigned_by,task.getAssignedBy())
         values.put(task_date,task.getDate())
+        values.put(task_id,task.getId())
+        values.put(assigned_by,task.getAssignedBy())
+
 
         db.insert(tableName,null,values)
+        Log.d("Function","createItem")
     }
 
     fun readItem(id:String){
@@ -48,6 +51,7 @@ class ToDoDatabaseHandler(context: Context): SQLiteOpenHelper(context, dbName,nu
             task.setAssignedBy(cursor.getString(cursor.getColumnIndex(assigned_by)))
             task.setDate(cursor.getString(cursor.getColumnIndex(task_date)))
             task.setId(cursor.getInt(cursor.getColumnIndex(task_id)))
+            Log.d("Function","readItem")
         }
     }
 
@@ -73,6 +77,7 @@ class ToDoDatabaseHandler(context: Context): SQLiteOpenHelper(context, dbName,nu
                 list.add(task)
             }while (cursor.moveToNext())
         }
+        Log.d("Function","readAllItems")
         return list
     }
 
