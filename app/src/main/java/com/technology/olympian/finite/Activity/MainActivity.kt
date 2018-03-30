@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
+import android.view.MenuItem
 import com.franmontiel.fullscreendialog.FullScreenDialogFragment
 import com.technology.olympian.finite.Data.ToDoAdapter
 import com.technology.olympian.finite.Data.ToDoDatabaseHandler
@@ -28,16 +30,30 @@ class MainActivity : AppCompatActivity(),FullScreenDialogFragment.OnDiscardListe
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
+
+
+        var t = ToDoItem()
+        t.setId(1)
+        t.setName("Digital Assignment")
+        t.setDate("2 March")
+        t.setAssignedBy("Software")
+
         dbHandler = ToDoDatabaseHandler(this)
+
         list = ArrayList<ToDoItem>()
         list = dbHandler!!.readAllItems()
+        list!!.add(t)
         layoutManager = LinearLayoutManager(this)
         adapter = ToDoAdapter(list!!,this)
 
         recyclerView.layoutManager = layoutManager
+        adapter!!.swipeToDeleteDelegate.pending = true
         recyclerView.adapter = adapter
 
-
+        val itemTouchHelper = ItemTouchHelper(adapter?.swipeToDeleteDelegate?.itemTouchCallBack)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
 
         fab_add.setOnClickListener {
 
@@ -52,4 +68,6 @@ class MainActivity : AppCompatActivity(),FullScreenDialogFragment.OnDiscardListe
 
         }
     }
+
+
 }
