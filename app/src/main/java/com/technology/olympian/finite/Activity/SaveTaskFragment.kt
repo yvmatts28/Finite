@@ -9,16 +9,14 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Toast
+import android.widget.*
 import com.awesome.dialog.AwesomeDatePickerDialog
 import com.awesome.dialog.datepicker.DatePickerListener
 import com.awesome.dialog.datepicker.utils.SelectionType
 import com.awesome.shorty.AwesomeToast
 import com.franmontiel.fullscreendialog.FullScreenDialogContent
 import com.franmontiel.fullscreendialog.FullScreenDialogController
+import com.shagi.materialdatepicker.date.DatePickerFragmentDialog
 import com.technology.olympian.finite.Data.ToDoDatabaseHandler
 import com.technology.olympian.finite.Data.ToDoItem
 import com.technology.olympian.finite.Model.tableName
@@ -58,10 +56,20 @@ class SaveTaskFragment : FullScreenDialogContent, Fragment() {
         val now = Calendar.getInstance()
         var cal = v.findViewById<ImageButton>(R.id.calendarBtn)
         var taskName = v.findViewById<EditText>(R.id.taskText)
-        var date = v.findViewById<EditText>(R.id.dateText)
+        var date = v.findViewById<TextView>(R.id.dateText)
         var assignedBy = v.findViewById<EditText>(R.id.assignedByText)
         cal.setOnClickListener {
 
+
+            val dialog = DatePickerFragmentDialog.newInstance({ view, year, monthOfYear, dayOfMonth ->
+                Toast.makeText(context,
+                        "year $year month $monthOfYear day $dayOfMonth",
+                        Toast.LENGTH_SHORT).show()
+
+                v.dateText.text = "$dayOfMonth/$monthOfYear/$year"
+            }, Calendar.YEAR+2017, Calendar.MONTH+1, Calendar.DAY_OF_MONTH+25)
+
+            dialog.show(fragmentManager, "tag")
 
         }
 

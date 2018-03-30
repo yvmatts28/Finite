@@ -9,7 +9,7 @@ val dbVersion:Int = 1
 val dbName:String = "task.db"
 val tableName:String = "tasks"
 
-val task_id:String = "id"
-val task_name:String = "name"
-val assigned_by:String = "assignedBy"
-val task_date:String = "date"
+val id:String = "Col_id"
+val name:String = "Col_name"
+val assigned:String = "Col_assignedBy"
+val date:String = "Col_date"

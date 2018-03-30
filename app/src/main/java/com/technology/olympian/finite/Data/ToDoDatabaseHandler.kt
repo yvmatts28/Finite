@@ -6,19 +6,21 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import android.widget.Toast
+import com.awesome.shorty.AwesomeToast
 import com.technology.olympian.finite.Model.*
 
 /**
  * Created by Yash on 26-03-2018.
  */
-class ToDoDatabaseHandler(context: Context): SQLiteOpenHelper(context, dbName,null, dbVersion) {
+class ToDoDatabaseHandler(var context: Context): SQLiteOpenHelper(context, dbName,null, dbVersion) {
     override fun onCreate(db: SQLiteDatabase?) {
-        var createTable = "CREATE TABLE ${tableName}(${task_id} INTEGER PRIMARY KEY,${task_name} TEXT,${assigned_by} TEXT,${task_date} TEXT)"
+        var createTable = "CREATE TABLE $tableName($id INTEGER PRIMARY KEY,$name TEXT,$assigned TEXT,$date TEXT);"
         db!!.execSQL(createTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-       db!!.execSQL("DROP TABLE IF EXISTS ${tableName}")
+       db!!.execSQL("DROP TABLE IF EXISTS $tableName;")
         onCreate(db)
     }
 
@@ -27,30 +29,39 @@ class ToDoDatabaseHandler(context: Context): SQLiteOpenHelper(context, dbName,nu
         var db:SQLiteDatabase = writableDatabase
 
         var values = ContentValues()
-        values.put(task_name,task.getName())
-        values.put(task_date,task.getDate())
-        values.put(task_id,task.getId())
-        values.put(assigned_by,task.getAssignedBy())
+        values.put(id,task.getId())
+        values.put(name,task.getName())
+        values.put(assigned,task.getAssignedBy())
+        values.put(date,task.getDate())
 
 
-        db.insert(tableName,null,values)
+
+
+        var result  = db.insert(tableName,null,values)
+        if(result == (-1).toLong())
+        {
+            AwesomeToast.error(context,"Unable to create Task",Toast.LENGTH_SHORT).show()
+        }
+        else{
+            AwesomeToast.success(context,"Data Inserted",Toast.LENGTH_SHORT).show()
+        }
         Log.d("Function","createItem")
     }
 
     fun readItem(id:String){
 
         var db:SQLiteDatabase = readableDatabase
-        var cursor:Cursor = db.query(tableName, arrayOf(task_id, task_name, assigned_by, task_date), "${task_id} =?", arrayOf(task_id.toString()),null,null,null,null)
+        var cursor:Cursor = db.query(tableName, arrayOf(com.technology.olympian.finite.Model.id, name, assigned, date), "${com.technology.olympian.finite.Model.id} =?", arrayOf(com.technology.olympian.finite.Model.id.toString()),null,null,null,null)
 
         if(cursor != null)
         {
             cursor.moveToFirst()
 
             var task = ToDoItem()
-            task.setName(cursor.getString(cursor.getColumnIndex(task_id)))
-            task.setAssignedBy(cursor.getString(cursor.getColumnIndex(assigned_by)))
-            task.setDate(cursor.getString(cursor.getColumnIndex(task_date)))
-            task.setId(cursor.getInt(cursor.getColumnIndex(task_id)))
+            task.setName(cursor.getString(cursor.getColumnIndex(name)))
+            task.setAssignedBy(cursor.getString(cursor.getColumnIndex(assigned)))
+            task.setDate(cursor.getString(cursor.getColumnIndex(date)))
+            task.setId(cursor.getInt(cursor.getColumnIndex(com.technology.olympian.finite.Model.id)))
             Log.d("Function","readItem")
         }
     }
@@ -61,7 +72,7 @@ class ToDoDatabaseHandler(context: Context): SQLiteOpenHelper(context, dbName,nu
 
         var list:ArrayList<ToDoItem> = ArrayList()
 
-        var select = " SELECT * FROM ${tableName}"
+        var select = " SELECT * FROM $tableName"
 
         var cursor:Cursor = db.rawQuery(select,null)
 
@@ -69,10 +80,10 @@ class ToDoDatabaseHandler(context: Context): SQLiteOpenHelper(context, dbName,nu
         {
             do {
                 var task = ToDoItem()
-                task.setName(cursor.getString(cursor.getColumnIndex(task_id)))
-                task.setAssignedBy(cursor.getString(cursor.getColumnIndex(assigned_by)))
-                task.setDate(cursor.getString(cursor.getColumnIndex(task_date)))
-                task.setId(cursor.getInt(cursor.getColumnIndex(task_id)))
+                task.setName(cursor.getString(cursor.getColumnIndex(name)))
+                task.setAssignedBy(cursor.getString(cursor.getColumnIndex(assigned)))
+                task.setDate(cursor.getString(cursor.getColumnIndex(date)))
+                task.setId(cursor.getInt(cursor.getColumnIndex(id)))
 
                 list.add(task)
             }while (cursor.moveToNext())
@@ -84,24 +95,24 @@ class ToDoDatabaseHandler(context: Context): SQLiteOpenHelper(context, dbName,nu
     fun updateItem(task: ToDoItem):Int{
         var db:SQLiteDatabase = writableDatabase
 
-        var values:ContentValues = ContentValues()
-        values.put(task_id,task.getId())
-        values.put(task_name,task.getName())
-        values.put(assigned_by,task.getAssignedBy())
-        values.put(task_date,task.getDate())
+        var values = ContentValues()
+        values.put(id,task.getId())
+        values.put(name,task.getName())
+        values.put(assigned,task.getAssignedBy())
+        values.put(date,task.getDate())
 
-        return db.update(tableName,values, "${task_id}=?", arrayOf(task.getId().toString()))
+        return db.update(tableName,values, "${id}=?", arrayOf(task.getId().toString()))
     }
 
     fun deleteItem(task: ToDoItem){
         var db:SQLiteDatabase = writableDatabase
-        db.delete(tableName, "${task_id}=?", arrayOf(task.getId().toString()))
+        db.delete(tableName, "${id}=?", arrayOf(task.getId().toString()))
         db.close()
     }
 
     fun getItemCount():Int{
         var db:SQLiteDatabase = readableDatabase
-        var count = "SELECT * FROM ${tableName}"
+        var count = "SELECT * FROM $tableName;"
         var cursor:Cursor = db.rawQuery(count,null)
         return cursor.count
     }
