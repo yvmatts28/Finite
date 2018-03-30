@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(),FullScreenDialogFragment.OnDiscardListe
 
 
 
-        fab_menu.addTask.setOnClickListener {
+        fab_add.setOnClickListener {
 
             var saveFragment = FullScreenDialogFragment.Builder(this@MainActivity)
                     .setTitle(" ")

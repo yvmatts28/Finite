@@ -62,14 +62,22 @@ class SaveTaskFragment : FullScreenDialogContent, Fragment() {
 
 
             val dialog = DatePickerFragmentDialog.newInstance({ view, year, monthOfYear, dayOfMonth ->
-                Toast.makeText(context,
-                        "year $year month $monthOfYear day $dayOfMonth",
-                        Toast.LENGTH_SHORT).show()
 
                 v.dateText.text = "$dayOfMonth/$monthOfYear/$year"
             }, Calendar.YEAR+2017, Calendar.MONTH+1, Calendar.DAY_OF_MONTH+25)
 
             dialog.show(fragmentManager, "tag")
+
+        }
+        v.dateText.setOnClickListener {
+
+            val dialog = DatePickerFragmentDialog.newInstance({ view, year, monthOfYear, dayOfMonth ->
+
+                v.dateText.text = "$dayOfMonth/$monthOfYear/$year"
+            }, Calendar.YEAR+2017, Calendar.MONTH+1, Calendar.DAY_OF_MONTH+25)
+
+            dialog.show(fragmentManager, "tag")
+
 
         }
 
