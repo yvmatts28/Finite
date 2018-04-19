@@ -9,7 +9,6 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
 import com.franmontiel.fullscreendialog.FullScreenDialogFragment
 import com.technology.olympian.finite.Data.ToDoAdapter
-import com.technology.olympian.finite.Data.ToDoDatabaseHandler
 import com.technology.olympian.finite.Data.ToDoItem
 import com.technology.olympian.finite.Model.SwipeToDeleteCallback
 import com.technology.olympian.finite.R
@@ -18,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(),FullScreenDialogFragment.OnDiscardListener {
 
-    var dbHandler:ToDoDatabaseHandler? = null
+
     var adapter:ToDoAdapter? = null
     var list:MutableList<ToDoItem>? = null
     var layoutManager:RecyclerView.LayoutManager? = null
@@ -35,18 +34,26 @@ class MainActivity : AppCompatActivity(),FullScreenDialogFragment.OnDiscardListe
         textView4.visibility = View.INVISIBLE
 
 
+
+        var t2 = ToDoItem()
+        t2.setId(1)
+        t2.setName("Digital Assignment")
+        t2.setDate("3 March")
+        t2.setAssignedBy("ALA")
+
+
+
+        list = ArrayList()
+
         var t = ToDoItem()
+    for(i in 0..10) {
         t.setId(1)
         t.setName("Digital Assignment")
         t.setDate("2 March")
         t.setAssignedBy("Software")
-
-        dbHandler = ToDoDatabaseHandler(this)
-
-        list = ArrayList()
-        list = dbHandler!!.readAllItems()
         list!!.add(t)
-
+    }
+        list!!.add(t2)
         if((list as ArrayList<ToDoItem>).isEmpty()){
             imageView3.visibility = View.VISIBLE
             textView4.visibility = View.VISIBLE
